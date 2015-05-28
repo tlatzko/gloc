@@ -39,12 +39,12 @@ flags = [
     '-wall',
     '-I/usr/include',
     '-I/usr/local/include',
-    '-I/home/latzko/work/gloc/include',
-    '-I/home/latzko/work/gloc/test/../src',
-    '-I/home/latzko/work/gloc/thirdparty/gmock-1.7.0',
-    '-I/home/latzko/work/gloc/thirdparty/gmock-1.7.0/gtest',
-    '-I/home/latzko/work/gloc/thirdparty/gmock-1.7.0/gtest/include',
-    '-I/home/latzko/work/gloc/thirdparty/gmock-1.7.0/include',
+    '-Iinclude',
+    '-Itest/../src',
+    '-Ithirdparty/gmock-1.7.0',
+    '-Ithirdparty/gmock-1.7.0/gtest',
+    '-Igmock-1.7.0/gtest/include',
+    '-Igmock-1.7.0/include',
 ]
 
 

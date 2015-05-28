@@ -19,6 +19,11 @@ SET (APPLICATION_VENDOR_URL "kit.edu")
 SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 
 #
+# Optional settings from the main folder
+#
+set(BUILD_PYTHON ON CACHE BOOL "BUILD Python extension")
+
+#
 # Debugging Options
 #
 SET (CMAKE_VERBOSE_MAKEFILE 0) # Use 1 for debugging, 0 for release
@@ -38,7 +43,18 @@ LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}")
 LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}/tools")
 LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}/thirdparty")
 SET (CMAKE_MODULE_PATH "${MAINFOLDER}/tools/share/cmake")
-INCLUDE_DIRECTORIES("${MAINFOLDER}/include")
+
+
+SET (EXTRA_INCLUDES)
+SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} /usr/local/include)
+SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} ${PROJECT_SOURCE_DIR}/include)
+SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} ${PROJECT_SOURCE_DIR}/thirdparty/include)
+
+message(STATUS "extra includes are ${EXTRA_INCLUDES}")
+
+include_directories(${EXTRA_INCLUDES})
+
+
 
 #
 # Compiler settings
@@ -100,6 +116,10 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(apps)
 ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(bench)
+
+if(BUILD_PYTHON)
+    ADD_SUBDIRECTORY(python)
+endif(BUILD_PYTHON)
 
 #
 # Add Install Targets

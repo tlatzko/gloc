@@ -1,11 +1,22 @@
 project(apps)
-include_directories(${EXTRA_INCLUDES})
+ADD_SUBDIRECTORY(gloria)
 
-find_package( OpenCV REQUIRED )
-add_executable(hello_cv hello_cv.cpp)
-target_link_libraries(hello_cv ${OpenCV_LIBS})
 
-add_executable(cubviewer cubviewer.cc)
-target_link_libraries(cubviewer ${OpenCV_LIBS})
+#
+# enable gpu build
+#
+set(BUILD_GPU Off CACHE BOOL "Build with GPU support")
 
+if(BUILD_GPU)
+	ADD_SUBDIRECTORY(gpu)
+endif(BUILD_GPU)
+
+#
+# enable opencv based build
+#
+set(BUILD_OCV Off CACHE BOOL "Build with GPU support")
+
+if(BUILD_OCV)
+	ADD_SUBDIRECTORY(ocvapp)
+endif(BUILD_OCV)
 
