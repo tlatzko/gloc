@@ -118,6 +118,8 @@ ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(bench)
 
 if(BUILD_PYTHON)
+
+    CONFIGURE_FILE(setup.py.in)
     ADD_SUBDIRECTORY(python)
 endif(BUILD_PYTHON)
 
