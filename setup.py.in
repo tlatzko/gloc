@@ -1,3 +1,4 @@
+#!python
 from setuptools import setup
 from distutils.sysconfig import get_python_lib
 import glob
@@ -13,9 +14,8 @@ Please see the file 'readme.rst' for further instructions.""")
 
 setup(
     name = "gloc",
-    package_dir={ '': '${CMAKE_CURRENT_SOURCE_DIR}/python' }, ,
-    data_files = [(get_python_lib(), glob.glob('src/*.so')),
-        ('bin', ['bin/rectangle-props'])],
+    package_dir={ 'gloc': '${CMAKE_CURRENT_SOURCE_DIR}/python/gloc' },
+    data_files = [(get_python_lib(), glob.glob('src/*.so')),],
     author = 'Thomas Latzko',
     description = 'Use the CMake build system to make Cython modules.',
     license = 'Apache',

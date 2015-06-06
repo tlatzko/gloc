@@ -5,7 +5,7 @@
 #
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6.2)
 PROJECT (gloc)
-SET (APPLICATION_NAME "GLOC")
+SET (APPLICATION_NAME "GLORIA_C_EXTENSION")
 SET (APPLICATION_CODENAME "{GLOC}")
 SET (APPLICATION_COPYRIGHT_YEARS "2014")
 SET (APPLICATION_VERSION_MAJOR 0)
@@ -21,7 +21,7 @@ SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 #
 # Optional settings from the main folder
 #
-set(BUILD_PYTHON ON CACHE BOOL "BUILD Python extension")
+set(BUILD_PYTHON on CACHE BOOL "BUILD Python extension")
 
 #
 # Debugging Options
@@ -32,9 +32,15 @@ SET (CMAKE_VERBOSE_MAKEFILE 0) # Use 1 for debugging, 0 for release
 # Project Output Paths
 #
 SET (MAINFOLDER ${PROJECT_SOURCE_DIR})
-SET (EXECUTABLE_OUTPUT_PATH "${MAINFOLDER}/bin")
-SET (LIBRARY_OUTPUT_PATH "${MAINFOLDER}/lib")
+#SET (EXECUTABLE_OUTPUT_PATH "${MAINFOLDER}/bin")
+#SET (LIBRARY_OUTPUT_PATH "${MAINFOLDER}/lib")
 SET (ASSETSFOLDER "${MAINFOLDER}/shared")
+
+#SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install_dir")
+SET(BUILD_PATH ${PROJECT_BINARY_DIR}/build)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build/bin)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/build/lib)
+
 
 #
 # Project Search Paths
@@ -48,6 +54,7 @@ SET (CMAKE_MODULE_PATH "${MAINFOLDER}/tools/share/cmake")
 SET (EXTRA_INCLUDES)
 SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} /usr/local/include)
 SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} ${PROJECT_SOURCE_DIR}/include)
+SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} ${PROJECT_SOURCE_DIR}/src)
 SET (EXTRA_INCLUDES ${EXTRA_INCLUDES} ${PROJECT_SOURCE_DIR}/thirdparty/include)
 
 message(STATUS "extra includes are ${EXTRA_INCLUDES}")
@@ -109,7 +116,7 @@ ENDFOREACH (CONFIGINPUT ${CONFIGINPUTS})
 #
 # Add Build Targets
 #
-
+enable_testing()
 # Add thirdparty directories first!
 ADD_SUBDIRECTORY(thirdparty/gmock-1.7.0)
 ADD_SUBDIRECTORY(src)
@@ -118,9 +125,25 @@ ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(bench)
 
 if(BUILD_PYTHON)
+    # files (as opposed to just subset of cmake files).
+    find_package(Python REQUIRED)
+    find_package(Cython REQUIRED)
+    set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
+    set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
+    set(DEPS        "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc/__init__.py")
+    set(OUTPUT      "${PROJECT_BINARY_DIR}/build/timestamp")
 
-    CONFIGURE_FILE(setup.py.in)
-    ADD_SUBDIRECTORY(python)
+    configure_file(${SETUP_PY_IN} ${SETUP_PY})
+
+    add_custom_command(OUTPUT ${OUTPUT}
+                       COMMAND ${PYTHON} ${SETUP_PY} build
+                       COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT}
+                       DEPENDS ${DEPS})
+
+    #add_custom_target(target ALL DEPENDS ${OUTPUT})
+
+    install(CODE "execute_process(COMMAND python ${SETUP_PY} install)")
+    ADD_SUBDIRECTORY(python/gloc)
 endif(BUILD_PYTHON)
 
 #
