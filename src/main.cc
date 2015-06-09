@@ -1,5 +1,3 @@
-#include "appinfo.h"
-
 #include <iostream>
 
 void push_to_talk(){

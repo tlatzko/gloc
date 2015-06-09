@@ -13,7 +13,6 @@
 #include <atomic>
 #include <thread>
 #include <memory>
-#include <boost/circular_buffer.hpp>
 #include <Eigen/Dense>
 #include <Eigen/Core>
 #include "gloc/cuboid.hpp"

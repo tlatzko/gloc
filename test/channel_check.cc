@@ -1,6 +1,5 @@
 #include <thread>
 #include <memory>
-#include <boost/optional.hpp>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "gloc/channel.hpp"
@@ -125,27 +124,3 @@ TEST(TestChannel, pointer){
 }
 
 
-void opsend( gloc::channel<boost::optional<int>> channel){
- boost::optional<int> i1(4);
-    boost::optional<int> i2;
-    std::cout<< "values \n";
-    channel.send(std::move(10));
-      std::cout<< "sended";   
-    channel.send(std::move(boost::none));
-    std::cout<< "sended";
-}
-
-TEST(TestChannel, option){
-    gloc::channel<boost::optional<int>> channel;
-    std::thread t(opsend, channel);
-    std::cout<<"init\n";
-       auto a = channel.recv();
-    if(a){
-        std::cout<< *a;
-    }
-    auto b = channel.recv();
-    if(!b){
-        std::cout<<" none is recv\n";
-    }
-    t.join();
-}
