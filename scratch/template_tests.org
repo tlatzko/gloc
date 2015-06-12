@@ -1,0 +1,110 @@
+#+TITLE: cfunctions
+#+DATE: <2015-06-12 Fri>
+#+AUTHOR: Thomas Latzko
+#+EMAIL: latzko@mint
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t todo:t |:t
+#+CREATOR: Emacs 24.3.50.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+
+* template testing with orgmode
+Test the fold expression of template arguments.
+This is an important capability of the new c++11 standard!!
+#+begin_src C++ 
+  #include <iostream>
+   
+  void tprintf(const char* format) // base function
+  {
+      std::cout << format;
+  }
+
+
+  template<typename T, typename... Targs>
+  void tprintf(const char* format, T value, Targs... Fargs) // recursive variadic function
+  {
+      for ( ; *format != '\0'; format++ ) {
+          if ( *format == '%' ) {
+             std::cout << value;
+             tprintf(format+1, Fargs...); // recursive call
+             return;
+          }
+          std::cout << *format;
+      }
+  }
+   
+  int main()
+  {
+      
+      tprintf("% world% %\n","Hello",'!',123);
+      return 0;
+  }
+
+#+end_src
+
+#+RESULTS:
+: Hello world! 123
+
+
+* template polynome with multiple parameter
+
+#+begin_src C++ :flags --std=c++11
+  #include <iostream>
+
+
+  template<class real>
+  real f(real x){
+      return x;
+  }
+  template<class first, class ...  types>
+  first f(first x, types ... values){
+      return x + f(values...);
+  }
+
+
+
+  template<class real, class first, class ... types>
+  real polyval(real x, first pi){
+      return pi;   
+  }
+
+  template<class real, class first, class ... types>
+  real polyval(real x, first pi, types ... params){
+      return x * pi + polyval(x, params...);
+  }
+
+
+  int main(){
+      double x = f(.2, .3, .1, .4);
+      auto p = [](double x) -> double{return polyval(x, 0.2, .3, .1, .4);};
+      
+      std::cout << "polynome  " << x << "\nreal_polynome "<< p(2.) << std::endl;
+  }
+#+end_src
+
+#+RESULTS:
+| polynome      |   1 |
+| real_polynome | 1.6 |
+
+
+* Template pipeline
+#+begin_src C++
+  #include <iostream>
+
+
+
+  int main(){
+      std::cout << "hello world" << std::endl;
+  }
+
+#+end_src
+
+#+RESULTS:
+: hello world
+

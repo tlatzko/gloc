@@ -15,12 +15,12 @@ Please see the file 'readme.rst' for further instructions.""")
 setup(
     name = "gloc",
     package_dir={ 'gloc': '${CMAKE_CURRENT_SOURCE_DIR}/python/gloc' },
-    data_files = [(get_python_lib(), glob.glob('src/*.so')),],
+    data_files = [(get_python_lib(), glob.glob('build/lib/*.so')),],
     author = 'Thomas Latzko',
     description = 'Use the CMake build system to make Cython modules.',
     license = 'Apache',
     keywords = 'cmake cython build',
-    url = 'http://github.com/thewtex/cython-cmake-example',
+    url = 'http://github.com/tlatzko/gloc',
     test_require = ['nose'],
     zip_safe = False,
     )

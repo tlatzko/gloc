@@ -17,6 +17,7 @@
 #include "gloc/cuboid.hpp"
 #include "gloc/channel.hpp"
 
+#include "IterativeLevel0.hpp"
 
 using namespace gloc;
 
@@ -25,34 +26,6 @@ std::string localData = "/home/latzko/work/experimental/data/20120828_124051.cub
 using upheader = std::shared_ptr<CuboidFrameHeader>;
 using frame_t = Eigen::ArrayXXd;
 using frame_ptr = std::shared_ptr<frame_t>;
-
-class Runnable
-{
-    public:
-        Runnable() : stop_(), thread_() { }
-        virtual ~Runnable() { try { stop(); } catch(...) { /*??*/ } }
-
-        Runnable(Runnable const&) = delete;
-
-    Runnable& operator =(Runnable const&) = delete;
-
-        void stop() {
-
-            stop_ = true; thread_.join();
-        }
-
-    void start() { thread_ = std::thread(&Runnable::run, this); }
-    void join() { thread_.join(); }
-
-protected:
-        virtual void run() = 0;
-        std::atomic<bool> stop_;
-
-    private:
-        std::thread thread_;
-};
-
-
 /**
  * The ReadNode should read frames transform into
  * a an image usually an opencv image and send it
@@ -74,8 +47,7 @@ class ReadNode : public Runnable{
             }
         ~ReadNode(){}
 
-    void run() {
-                
+        void run() {
             CuboidFile cub(localData);
             
             frame_to_frametype F;

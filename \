@@ -7,7 +7,7 @@
 
 #define PI 3.14159265358
 
-namespace gloc {
+namespace gloc{
 
     /**
      * Perform a apodized sinc for a limited kernel
@@ -17,7 +17,8 @@ namespace gloc {
      */
     template<class real>
     real
-    apod_sinc(real x, real alpha) {
+    apod_sinc(real x, real alpha)
+    {
         const real pi = static_cast<real>(PI);
 
         if (x == static_cast<real>(0))
@@ -38,7 +39,8 @@ namespace gloc {
      */
     template<class real>
     real
-    sinc(const real& x) {
+    sinc(const real& x)
+    {
         const real pi = static_cast<real>(PI);
         if (x == static_cast<real>(0))
         {
@@ -46,6 +48,7 @@ namespace gloc {
         }
         const real xpi = pi * x;
         return static_cast<real>(sin(xpi) / xpi);
+
     }
 
     /**
@@ -54,41 +57,31 @@ namespace gloc {
      * the parameter set is with a descending order such 
      * as; $f(x) = p_0 * xˆ{n} + p_1 * xˆ{n - 1} + ... + p_n$
      */
-template<class real>
-class Polynome {
- protected:
-    std::vector<real> parameter_;
- public:
-    Polynome() = delete;
+    template<class real>
+    class Polynome{
+    protected:
+        std::vector<real> parameter_;
+    public:
+        Polynome() = delete;
+        Polynome(std::vector<real> parameter): parameter_(parameter){ }
 
-    Polynome(std::vector<real> parameter): parameter_(parameter){ }
-
-    real operator()(real x){
-        real val = parameter_[0];
-        for ( size_t i=0; i < parameter_.size() - 1; ++i ) {
-            val = val * x + parameter_[i + 1];
+        real operator()(real x){
+            real val = parameter_[0];
+            for(size_t i=0; i < parameter_.size() - 1; ++i){
+                val = val * x + parameter_[i + 1];
+            }
+            return val;
         }
-        return val;
-    }
-};
+    };
 
 
-/**
- * the polyval class is a metatemplate function
- * which gets a various number of parameters
- * f(x, p0, ..., pn) = x^n * p_0 + ... + x * p_{n - 1} + p_n
- * @param: x is the value where f i evaluated at
- * @param params...: a list of values
- */
-template<class real, class first>
-real polyval(real x, first pi) {
-    return pi;
-}
-
-template<class real, class first, class ... types>
-real polyval(real x, first pi, types ... params) {
-    return x * pi + polyval(x, params...);
-}
+    template< double param >
+        class polyval{
+            public:
+                static inline double EXEC(double x){
+                }
+        };
+                    
 
 } // end namespace gloc
 #endif // MATH_HPP
