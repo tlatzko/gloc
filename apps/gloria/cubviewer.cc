@@ -1,4 +1,3 @@
-
 /*
  * perftester.cc
  *
@@ -34,18 +33,18 @@ class Runnable
         virtual ~Runnable() { try { stop(); } catch(...) { /*??*/ } }
 
         Runnable(Runnable const&) = delete;
-        
-        Runnable& operator =(Runnable const&) = delete;
 
-        void stop() { 
-            stop_ = true; thread_.join(); 
+    Runnable& operator =(Runnable const&) = delete;
+
+        void stop() {
+
+            stop_ = true; thread_.join();
         }
-        
-        void start() { thread_ = std::thread(&Runnable::run, this); }
 
-        void join() { thread_.join(); }
-   
-    protected:
+    void start() { thread_ = std::thread(&Runnable::run, this); }
+    void join() { thread_.join(); }
+
+protected:
         virtual void run() = 0;
         std::atomic<bool> stop_;
 
@@ -70,16 +69,15 @@ class ReadNode : public Runnable{
     public:
         ReadNode() = delete;
         ReadNode(std::string file_name, gloc::ochannel<frametype, buffer_size> out,
-                ochannel<CuboidFrameHeader> header_out): 
+                ochannel<CuboidFrameHeader> header_out):
             file_name_(file_name), frame_out_(out), frame_header_out_(header_out){
             }
         ~ReadNode(){}
-        
 
-        void run() { 
+        void run() {
             CuboidFile cub(localData);
-
-            frame_ptro_frametype F;
+            
+            frametype F;
             const size_t frame_count = cub.getFrameCount();
             for(size_t i =0; i < frame_count; ++i){
                 auto frame = cub.getFrame(i);
@@ -106,7 +104,7 @@ class FrameRecv : public Runnable{
     public:
         FrameRecv(channel<frametype, 5> chan): frames_(chan){
         }
-        
+
         void finalize(){
             std::cout<< "final steps\n";
         }
@@ -139,7 +137,9 @@ class FrameMean : public Runnable{
         FrameMean(ichannel<frametype, 5>chan, ochannel<frametype, 5> chanout):
             frames_(chan), frames_out_(chanout){}
         void run(){
+
             auto frame = frames_.recv();
+
             size_t i = 1;
             frame_t M_((*frame));
             while(true){
@@ -148,7 +148,7 @@ class FrameMean : public Runnable{
                     frames_out_.send(std::move(frame));
                     break;
                 }
-                
+
                 auto M = *frame;
                 M_ = M_ + M;
                 frames_out_.send(std::move(frame));
@@ -165,31 +165,31 @@ class BufferedMean : public Runnable{
     protected:
         ichannel<frametype, 5> frames_;
         ochannel<frametype, 5> frames_out_;
-        std::deque<frametype> buffer_;    
+        std::deque<frametype> buffer_;
 
-    public:
-
+public:
         BufferedMean(ichannel<frametype, 5> chan,
                 ochannel<frametype, 5> chan_out):
             frames_(chan),
-            frames_out_(chan_out){    
+            frames_out_(chan_out){
             }
 
         frame_ptr compute_the_mean(){
             frame_ptr m0(nullptr);
+
             for(size_t i=0; i < buffer_size; ++i){
                 if(i == 0){
                     m0.reset(new frame_t((*buffer_[i])));
                 }
-                
+
                 else{
                     if(!buffer_[i]){
                         std::cout<< "chrash";
                         break;
                     }
-                    
+
                     (*m0) += (*buffer_[i]);
-                    
+
                 }
 
             }
@@ -204,7 +204,7 @@ class BufferedMean : public Runnable{
                     return false;
                 }
                 buffer_.push_back(std::move(frame));
-           
+
             }
             buffer_.shrink_to_fit();
             return true;
@@ -212,6 +212,7 @@ class BufferedMean : public Runnable{
 
         void run(){
            bool filled = fill_the_buffer();
+
            if(filled){
                while(true){
                    auto frame = frames_.recv();
@@ -222,7 +223,7 @@ class BufferedMean : public Runnable{
                    auto fout = compute_the_mean();
                    this->buffer_.pop_front();
                    this->buffer_.push_back(std::move(frame));
-                  
+
                    frames_out_.send(std::move(fout));
                }
            }
@@ -279,7 +280,7 @@ int main(){
     channel<frame_ptr, 5> frame_chan;
     channel<frame_ptr, 5> buffer_chan;
     channel<frame_ptr, 5> mean_chan;
-    channel<CuboidFrameHeader> header_chan; 
+    channel<CuboidFrameHeader> header_chan;
     // nodes
     ReadNode<frame_ptr, convertArrayToMat, 5> r(localData, frame_chan, header_chan);
     BufferedMean<frame_ptr, 40> bf(frame_chan, buffer_chan);

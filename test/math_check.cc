@@ -7,14 +7,14 @@
 #include "gloc/math.hpp"
 
 
-
 using namespace std;
 
-
 TEST(Math, sinc){
+    
     double cval = 1.;
     double x = 0.;
     auto tval = gloc::sinc(x);
+    
     ASSERT_TRUE(tval == cval);
     // test eval value work
     x = 0.5;
