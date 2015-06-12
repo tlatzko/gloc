@@ -42,6 +42,7 @@ flags = [
     '-Iinclude',
     '-Itest/../src',
     '-Ithirdparty/gmock-1.7.0',
+    '-Ithirdparty/include',
     '-Ithirdparty/gmock-1.7.0/gtest',
     '-Igmock-1.7.0/gtest/include',
     '-Igmock-1.7.0/include',

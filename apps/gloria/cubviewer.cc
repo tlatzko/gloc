@@ -59,7 +59,7 @@ protected:
  * with a channel
  **/
 
-template<class frametype, class frame_ptro_frametype, int buffer_size=5>
+template<class frametype, class frame_to_frametype, int buffer_size=5>
 class ReadNode : public Runnable{
     private:
         std::string file_name_;
@@ -77,7 +77,7 @@ class ReadNode : public Runnable{
         void run() {
             CuboidFile cub(localData);
             
-            frametype F;
+            frame_to_frametype F;
             const size_t frame_count = cub.getFrameCount();
             for(size_t i =0; i < frame_count; ++i){
                 auto frame = cub.getFrame(i);
@@ -139,9 +139,10 @@ class FrameMean : public Runnable{
         void run(){
 
             auto frame = frames_.recv();
-
+            assert(frame != nullptr);
+                
             size_t i = 1;
-            frame_t M_((*frame));
+            frame_t M_(*frame);
             while(true){
                 auto frame = frames_.recv();
                 if(frame == nullptr){
