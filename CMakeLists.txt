@@ -1,5 +1,4 @@
 # <Copyright Holder>. Copyright (C) <Copyright Year(s)>. <License>.
-
 #
 # Project Properties
 #
@@ -127,17 +126,18 @@ ADD_SUBDIRECTORY(bench)
 if(BUILD_PYTHON)
     # files (as opposed to just subset of cmake files).
     find_package(Python REQUIRED)
-    find_package(Cython REQUIRED)
+    
     set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
     set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
     set(DEPS        "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc/__init__.py")
-    set(OUTPUT      "${PROJECT_BINARY_DIR}/build/timestamp")
+    set(OUTPUT      "${CMAKE_CURRENT_BINARY_DIR}/build")
+    
 
+    message("toch output: ${OUTPUT}")
     configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
     add_custom_command(OUTPUT ${OUTPUT}
-                       COMMAND ${PYTHON} ${SETUP_PY} build
-                       COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT}
+                       COMMAND ${PYTHON} ${SETUP_PY} develop
                        DEPENDS ${DEPS})
 
     #add_custom_target(target ALL DEPENDS ${OUTPUT})

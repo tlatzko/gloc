@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: gloc
+Version: 0.0.0
+Summary: Use the CMake build system to make Cython modules.
+Home-page: http://github.com/tlatzko/gloc
+Author: Thomas Latzko
+Author-email: UNKNOWN
+License: Apache
+Description: UNKNOWN
+Keywords: cmake cython build
+Platform: UNKNOWN

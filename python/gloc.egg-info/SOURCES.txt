@@ -1,0 +1,7 @@
+setup.py
+/home/latzko/work/gloc/python/gloc/__init__.py
+/home/latzko/work/gloc/python/gloc.egg-info/PKG-INFO
+/home/latzko/work/gloc/python/gloc.egg-info/SOURCES.txt
+/home/latzko/work/gloc/python/gloc.egg-info/dependency_links.txt
+/home/latzko/work/gloc/python/gloc.egg-info/not-zip-safe
+/home/latzko/work/gloc/python/gloc.egg-info/top_level.txt

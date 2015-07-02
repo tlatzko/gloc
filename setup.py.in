@@ -1,26 +1,28 @@
 #!python
-from setuptools import setup
+from setuptools import setup, find_packages
 from distutils.sysconfig import get_python_lib
 import glob
 import os
 import sys
 
 if os.path.exists('readme.rst'):
-    print("""The setup.py script should be executed from the build directory.
-
-Please see the file 'readme.rst' for further instructions.""")
+    print("""The setup.py script should be executed from the build directory. 
+    Please see the file 'readme.rst' for further instructions.""")
     sys.exit(1)
 
 
+libfiles = glob.glob("${CMAKE_CURRENT_BINARY_DIR}/python/gloc/*.so")
+print("libraries added to gloc : {}".format(libfiles))
 setup(
     name = "gloc",
-    package_dir={ 'gloc': '${CMAKE_CURRENT_SOURCE_DIR}/python/gloc' },
-    data_files = [(get_python_lib(), glob.glob('build/lib/*.so')),],
+    packages=find_packages(),
+    package_dir = { 'gloc': '${CMAKE_CURRENT_BINARY_DIR}/python/gloc' },
+    packages_data = {'': [os.path.basename(f) for f in libfiles]},
     author = 'Thomas Latzko',
+    author_email = "thomas.latzko@kit.edu",
     description = 'Use the CMake build system to make Cython modules.',
     license = 'Apache',
     keywords = 'cmake cython build',
     url = 'http://github.com/tlatzko/gloc',
-    test_require = ['nose'],
     zip_safe = False,
     )

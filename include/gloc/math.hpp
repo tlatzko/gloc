@@ -8,6 +8,7 @@
 
 namespace gloc
 {
+	
 
   /**
    * Perform a apodized sinc for a limited kernel
