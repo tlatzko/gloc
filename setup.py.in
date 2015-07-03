@@ -14,6 +14,7 @@ if os.path.exists('readme.rst'):
 libfiles = glob.glob("${CMAKE_CURRENT_BINARY_DIR}/python/gloc/*.so")
 lstfiles = [os.path.basename(f) for f in libfiles]
 print("libraries added to gloc : {}".format(lstfiles))
+
 setup(
     name = "gloc",
     version="0.1.0",

@@ -117,11 +117,11 @@ ENDFOREACH (CONFIGINPUT ${CONFIGINPUTS})
 #
 enable_testing()
 # Add thirdparty directories first!
-ADD_SUBDIRECTORY(thirdparty/gmock-1.7.0)
+#ADD_SUBDIRECTORY(thirdparty/gmock-1.7.0)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(apps)
 ADD_SUBDIRECTORY(test)
-ADD_SUBDIRECTORY(bench)
+#ADD_SUBDIRECTORY(bench)
 
 if(BUILD_PYTHON)
     # files (as opposed to just subset of cmake files).
@@ -144,6 +144,8 @@ if(BUILD_PYTHON)
 
     install(CODE "execute_process(COMMAND python ${SETUP_PY} install)")
     ADD_SUBDIRECTORY(python/gloc)
+    
+
 endif(BUILD_PYTHON)
 
 #

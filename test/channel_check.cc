@@ -1,7 +1,8 @@
+#define BOOST_TEST_MODULE ChannelCheck
+#include <boost/test/unit_test.hpp>
 #include <thread>
 #include <memory>
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
+
 #include "gloc/channel.hpp"
 
 typedef std::unique_ptr<double[]> darr;
@@ -18,7 +19,7 @@ void generator(gloc::ochannel<darr> c){
 void sink(gloc::ichannel<darr> c){
     auto arr = c.recv();
     for(int i=0; i< 5;++i){
-        ASSERT_TRUE(i * 0.5 == arr[i]);
+        BOOST_ASSERT(i * 0.5 == arr[i]);
     }
 }
 
@@ -26,7 +27,7 @@ void thread_a(gloc::channel<int> c){
     int i = 5;
     c.send(i);
     int j = c.recv();
-    ASSERT_TRUE(j == 6);
+    BOOST_ASSERT(j == 6);
 }
 
 void thread_b(gloc::channel<int> c){
@@ -57,7 +58,7 @@ void test_eos_rec(gloc::channel<int> c){
         }
 }
 
-TEST(TestChannel, Work) {
+BOOST_AUTO_TEST_CASE(Work) {
     gloc::channel<int> c;
     std::thread a(thread_a, c);
     std::thread b(thread_b, c);
@@ -65,7 +66,7 @@ TEST(TestChannel, Work) {
     b.join();
 }
 
-TEST(TestChannel, Unique){
+BOOST_AUTO_TEST_CASE(Unique){
     gloc::channel<darr> c;
     std::thread ta(generator, c);
     std::thread tb(sink, c);
@@ -73,14 +74,14 @@ TEST(TestChannel, Unique){
     tb.join();
 }
 
-TEST(TestChannel, Limit){
+BOOST_AUTO_TEST_CASE(Limit){
     gloc::channel<int, 2> c1;
     std::thread t1(test_send10_ints<decltype(c1)>, c1);
     int j;
     try{
     for(int i = 0; i <10;++i){
         j = c1.recv();
-        ASSERT_TRUE(j == i);
+        BOOST_ASSERT(j == i);
 
     }}
     catch(std::exception& e){
@@ -113,7 +114,7 @@ void txsend(gloc::channel<std::unique_ptr<test> > c){
 }
 
 
-TEST(TestChannel, pointer){
+BOOST_AUTO_TEST_CASE(pointer){
     using up = std::unique_ptr<test>;
     gloc::channel<up> c;
     std::thread t(txsend, c);

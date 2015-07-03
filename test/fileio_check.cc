@@ -1,8 +1,8 @@
-#include <thread>
+#define BOOST_TEST_MODULE TestFileio
+#include <boost/test/unit_test.hpp>
 #include <memory>
 #include <string>
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
+
 #include "gloc/cuboid.hpp"
 #include "gloc/laserxa.hpp"
 
@@ -12,14 +12,14 @@
 using namespace std;
 
 
-TEST(TestFileio, cuboid){
+BOOST_AUTO_TEST_CASE(cuboid){
     string path(CUBFILE);
     gloc::CuboidFile cub(path);
     auto frame = cub.getFrame(10);
     cout<< cub.getFrameCount()<<endl;
 }
 
-TEST(TestFileio, laserx){
+BOOST_AUTO_TEST_CASE(laserx){
     string path(LXAFILE);
     gloc::LaserxaFile lxa(path);
     // test read of a dataset
