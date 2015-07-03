@@ -33,4 +33,13 @@ class ResampleControl{
     std::string file_name_;
 };
 
+
+class Hello {
+public:
+  Hello();
+
+  char const* say_hello();
+  
+};
+
 #endif // RESAMPLER_H

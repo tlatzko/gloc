@@ -12,12 +12,14 @@ if os.path.exists('readme.rst'):
 
 
 libfiles = glob.glob("${CMAKE_CURRENT_BINARY_DIR}/python/gloc/*.so")
-print("libraries added to gloc : {}".format(libfiles))
+lstfiles = [os.path.basename(f) for f in libfiles]
+print("libraries added to gloc : {}".format(lstfiles))
 setup(
     name = "gloc",
-    packages=find_packages(),
-    package_dir = { 'gloc': '${CMAKE_CURRENT_BINARY_DIR}/python/gloc' },
-    packages_data = {'': [os.path.basename(f) for f in libfiles]},
+    version="0.1.0",
+    packages=['gloc'],
+    package_dir = { 'gloc': 'python/gloc' },
+    package_data = {'': lstfiles},
     author = 'Thomas Latzko',
     author_email = "thomas.latzko@kit.edu",
     description = 'Use the CMake build system to make Cython modules.',

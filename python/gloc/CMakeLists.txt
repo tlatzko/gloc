@@ -1,6 +1,8 @@
 SET(LIBRARY_OUTPUT_PATH )
 find_package(Boost COMPONENTS python REQUIRED)
 find_package( PythonLibs REQUIRED)
+find_package( Numpy )
+
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 message("include directorties ${BOOST_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS}")
 
@@ -13,7 +15,7 @@ foreach(srcfile ${PROJECT_SRCS})
   get_filename_component(sname ${srcfile} NAME_WE)
   add_library(${sname} SHARED ${srcfile})
   message("libraries ${Boost_LIBRARIES} ${PYTHON_LIBRARIES}")
-  target_link_libraries(${sname} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+  target_link_libraries(${sname} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gloc)
   set_target_properties(${sname} PROPERTIES PREFIX "")
   
   if( WIN32 )
