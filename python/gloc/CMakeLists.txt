@@ -7,26 +7,39 @@ find_package( Numpy )
 include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 message("include directorties ${BOOST_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS}")
 
+message("I am in example folder")
 
-file (GLOB_RECURSE PROJECT_SRCS *.cpp *.cxx *.cc *.c)
-file (GLOB_RECURSE PYTHON_FILES *.py)
-# FILE(COPY ${PYTHON_FILES} DESTINATION .)
-
-foreach(srcfile ${PROJECT_SRCS})
-  get_filename_component(sname ${srcfile} NAME_WE)
-  add_library(${sname} SHARED ${srcfile})
-  message("libraries ${Boost_LIBRARIES} ${PYTHON_LIBRARIES}")
-  target_link_libraries(${sname} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} gloc)
-  set_target_properties(${sname} PROPERTIES PREFIX "")
+# custom macro with most of the redundant code for making a python example module
+macro( addPythonExe _name _srccpp )
+  ADD_EXECUTABLE(${_name} ${_srccpp})
   
-  if( WIN32 )
-    set_target_properties(${sname} PROPERTIES SUFFIX ".pyd")
-  elseif( APPLE OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    # on mac osx, python cannot import libraries with .dylib extension
-    set_target_properties(${sname} PROPERTIES SUFFIX ".so")
-  endif()  
-endforeach()
+  # make the pyd library link against boost_numpy python and boost
+  TARGET_LINK_LIBRARIES(${_name} boost_numpy)
+  
+  # put the example target into a VS solution folder named example (should
+  # be a no-op for Linux)
+  #SET_PROPERTY(TARGET ${_name} PROPERTY FOLDER "example")
+endmacro()
 
+macro( addPythonMod _name _srccpp )
+  PYTHON_ADD_MODULE(${_name} ${_srccpp})
+  
+  # make the pyd library link against boost_numpy python and boost
+  TARGET_LINK_LIBRARIES(${_name} boost_numpy )
+  
+  # put the example target into a VS solution folder named example (should
+  # be a no-op for Linux)
+  #SET_PROPERTY(TARGET ${_name} PROPERTY FOLDER "example")
+endmacro()
+
+message("something weird happend")
+
+addPythonMod(greet greet.cpp)
+target_link_libraries(greet gloc)
+
+addPythonMod(gaussian gaussian.cpp)
+
+# Python install path
 set(PY_PATH ${PYTHON_INSTALL_PATH}/gloc)
 install(FILES __init__.py
     DESTINATION ${PY_PATH}
