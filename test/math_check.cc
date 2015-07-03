@@ -1,32 +1,33 @@
-#define BOOST_TEST_MODULE MATH_TEST
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
 
 #include <thread>
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/test/unit_test.hpp>
+
 #include "gloc/math.hpp"
 
 using namespace std;
 
-BOOST_AUTO_TEST_CASE(sinc) {
+TEST_CASE("test the sinc values", "sinc") {
     double cval = 1.;
     double x = 0.;
     auto tval = gloc::sinc(x);
 
-    BOOST_CHECK_EQUAL(tval, cval);
+    REQUIRE(tval == cval);
     // test eval value work
     x = 0.5;
     auto tval2 = gloc::sinc(x);
-    BOOST_CHECK_GE(tval2, 0);
+    REQUIRE(tval2 > 0);
 
     x = 1.5;
     auto tval3 = gloc::sinc(x);
-    BOOST_CHECK_GE(0, tval3);
+    REQUIRE(0 > tval3);
     
 }
 
-BOOST_AUTO_TEST_CASE(polynome) {
+TEST_CASE("test the polynome functions", "polynome") {
     std::vector<double> params(4);
     params[0] = 0.5;
     params[1] = 0.5;
@@ -37,14 +38,14 @@ BOOST_AUTO_TEST_CASE(polynome) {
     double x = 1.;
 
     auto y = poly(x);
-    BOOST_CHECK_EQUAL(y, 2.0);
+    REQUIRE(y == 2.0);
 }
 
-BOOST_AUTO_TEST_CASE(templatepoly) {
+TEST_CASE("the metaprogramming polynome", "templatepoly") {
     auto poly = [](double x) -> double {return gloc::polyval(x, 0.2, .3, .1, .4);};
     double checker = 1.;
     double value = poly(1.);
-    BOOST_CHECK_EQUAL(checker, value);
+    REQUIRE(checker == value);
 
     std::vector<double> params(4);
     params[0] = 0.2;
@@ -57,6 +58,6 @@ BOOST_AUTO_TEST_CASE(templatepoly) {
     double val1 = poly(2.);
     double val2 = poly2(2.);
     std::cout << val1 << " : " << val2 << std::endl;
-    BOOST_CHECK_EQUAL(val1, val2);
+    REQUIRE(val1 == val2);
             
 }

@@ -1,5 +1,6 @@
-#define BOOST_TEST_MODULE ChannelCheck
-#include <boost/test/unit_test.hpp>
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
+
 #include <thread>
 #include <memory>
 
@@ -9,7 +10,7 @@ typedef std::unique_ptr<double[]> darr;
 
 void generator(gloc::ochannel<darr> c){
 
-    darr arr(new double[5]);
+  darr arr(new double[5]);
     for(int i=0; i<5;++i){
         arr[i] = i * 0.5;
     }
@@ -19,7 +20,7 @@ void generator(gloc::ochannel<darr> c){
 void sink(gloc::ichannel<darr> c){
     auto arr = c.recv();
     for(int i=0; i< 5;++i){
-        BOOST_ASSERT(i * 0.5 == arr[i]);
+      REQUIRE((i * 0.5) == arr[i]);
     }
 }
 
@@ -27,7 +28,7 @@ void thread_a(gloc::channel<int> c){
     int i = 5;
     c.send(i);
     int j = c.recv();
-    BOOST_ASSERT(j == 6);
+    REQUIRE(j == 6);
 }
 
 void thread_b(gloc::channel<int> c){
@@ -58,7 +59,7 @@ void test_eos_rec(gloc::channel<int> c){
         }
 }
 
-BOOST_AUTO_TEST_CASE(Work) {
+TEST_CASE("Work") {
     gloc::channel<int> c;
     std::thread a(thread_a, c);
     std::thread b(thread_b, c);
@@ -66,7 +67,7 @@ BOOST_AUTO_TEST_CASE(Work) {
     b.join();
 }
 
-BOOST_AUTO_TEST_CASE(Unique){
+TEST_CASE("Unique"){
     gloc::channel<darr> c;
     std::thread ta(generator, c);
     std::thread tb(sink, c);
@@ -74,14 +75,14 @@ BOOST_AUTO_TEST_CASE(Unique){
     tb.join();
 }
 
-BOOST_AUTO_TEST_CASE(Limit){
+TEST_CASE("Limit"){
     gloc::channel<int, 2> c1;
     std::thread t1(test_send10_ints<decltype(c1)>, c1);
     int j;
     try{
     for(int i = 0; i <10;++i){
         j = c1.recv();
-        BOOST_ASSERT(j == i);
+        REQUIRE(j == i);
 
     }}
     catch(std::exception& e){
@@ -114,7 +115,7 @@ void txsend(gloc::channel<std::unique_ptr<test> > c){
 }
 
 
-BOOST_AUTO_TEST_CASE(pointer){
+TEST_CASE("pointer"){
     using up = std::unique_ptr<test>;
     gloc::channel<up> c;
     std::thread t(txsend, c);

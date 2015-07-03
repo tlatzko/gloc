@@ -117,7 +117,7 @@ ENDFOREACH (CONFIGINPUT ${CONFIGINPUTS})
 #
 enable_testing()
 # Add thirdparty directories first!
-#ADD_SUBDIRECTORY(thirdparty/gmock-1.7.0)
+
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(apps)
 ADD_SUBDIRECTORY(test)
@@ -126,7 +126,7 @@ ADD_SUBDIRECTORY(test)
 if(BUILD_PYTHON)
     # files (as opposed to just subset of cmake files).
     find_package(Python REQUIRED)
-    
+    ADD_SUBDIRECTORY(thirdparty/Boost.NumPy)    
     set(SETUP_PY_IN "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in")
     set(SETUP_PY    "${CMAKE_CURRENT_BINARY_DIR}/setup.py")
     set(DEPS        "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc/__init__.py")
