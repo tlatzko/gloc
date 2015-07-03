@@ -1,16 +1,6 @@
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#define BOOST_TEST_MODULE TestFileio
+#include <boost/test/unit_test.hpp>
 
-int add(int a, int b){
-  return a + b;
-}
-
-SCENARIO("sanity", "[santest]"){
-  GIVEN("nothing that matters"){
-    WHEN( "adding two numbers"){
-      THEN("The result should be the sum of both"){
-        REQUIRE(add(10, 10) == 20);
-      }
-    }
-  }
+BOOST_AUTO_TEST_CASE(SANITY){
+  BOOST_ASSERT(true);
 }
