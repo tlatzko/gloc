@@ -10,3 +10,4 @@ docs/search/*
 src/appinfo.h
 *.swp
 *.pyc
+*.so
