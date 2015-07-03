@@ -1,5 +1,6 @@
-#define BOOST_TEST_MODULE TestFileio
-#include <boost/test/unit_test.hpp>
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
+
 #include <memory>
 #include <string>
 
@@ -12,22 +13,27 @@
 using namespace std;
 
 
-BOOST_AUTO_TEST_CASE(cuboid){
+TEST_CASE("Cubfile will be opend", "[cubfile]"){
     string path(CUBFILE);
     gloc::CuboidFile cub(path);
     auto frame = cub.getFrame(10);
-    cout<< cub.getFrameCount()<<endl;
+    REQUIRE(cub.getFrameCount() > 0);
+    
 }
 
-BOOST_AUTO_TEST_CASE(laserx){
+
+TEST_CASE("Laser xa fileio is tested", "[laserxa]"){
     string path(LXAFILE);
     gloc::LaserxaFile lxa(path);
     // test read of a dataset
-    auto dat = lxa.get_data(10);
+    auto dat = lxa.get_data(100);
+    REQUIRE(dat.timestamp_ms > 0);
     cout<< lxa.size()<<endl;
     // test get direction
     auto direct = gloc::get_direction_from_lxa(lxa);
     cout << direct;
     // resolve the time
     auto time = lxa.get_time_at(10);
+    
+    REQUIRE(time > 0);
 }
