@@ -97,7 +97,7 @@ namespace gloc
 	{
 	  m_is_recv_ready = true;
 	  m_recv_cv.wait (lock, [this]
-	    { return !m_queue.empty();});
+	    { return !this->m_queue.empty();});
 
 	  // TODO: support the case where both ends of a channel are inside a select
 	  assert(!is_try_ready ());
@@ -826,8 +826,8 @@ namespace gloc
 	    // previous _send() has successfully enqueued element
 	    std::unique_lock < std::mutex > lock (m_mutex);
 	    m_send_begin_cv.wait (lock, [this]
-	      { return m_is_send_done &&
-		m_is_try_send_done && !is_full();});
+	      { return this->m_is_send_done &&
+		this->m_is_try_send_done && !this->is_full();});
 
 	    assert(m_is_send_done);
 	    assert(m_is_try_send_done);
@@ -854,7 +854,7 @@ namespace gloc
 	    //
 	    // Performance note: unblocks after at least N successful recv calls
 	    m_send_end_cv.wait (lock, [this]
-	      { return !is_full();});
+	      { return !this->is_full();});
 	    m_is_send_done = true;
 	  }
 
