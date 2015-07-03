@@ -4,6 +4,7 @@ from distutils.sysconfig import get_python_lib
 import glob
 import os
 import sys
+import shutil
 
 if os.path.exists('readme.rst'):
     print("""The setup.py script should be executed from the build directory. 
@@ -11,16 +12,29 @@ if os.path.exists('readme.rst'):
     sys.exit(1)
 
 
+def copy_libraries():
+    '''
+    Just a hack but necessary for the installation
+    '''
+    target_path = "${LIBRARY_OUTPUT_PATH}"
+    lib_files = [f for f in os.listdir(target_path) if ".so" in f]
+    print("move library files: {}".format(lib_files))
+    for f in lib_files:
+        shutil.copy(os.path.join(target_path, f),
+                    os.path.join("${CMAKE_CURRENT_SOURCE_DIR}/python/gloc", f))
+
+
+copy_libraries()
 
 setup(
     name = "gloc",
     version="0.1.0",
     packages=['gloc'],
-    package_dir = { 'gloc': '${LIBRARY_OUTPUT_PATH}' },
+    package_dir = { 'gloc': "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc"},
     package_data = {'': ['*.so']},
     author = 'Thomas Latzko',
     author_email = "thomas.latzko@kit.edu",
-    description = 'Use the CMake build system to make Cython modules.',
+    description = 'Use the CMake build system to make Python modules.',
     license = 'Apache',
     keywords = 'cmake cython build',
     url = 'http://github.com/tlatzko/gloc',

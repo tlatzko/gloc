@@ -40,24 +40,3 @@ TEST_CASE("test the polynome functions", "polynome") {
     auto y = poly(x);
     REQUIRE(y == 2.0);
 }
-
-TEST_CASE("the metaprogramming polynome", "templatepoly") {
-    auto poly = [](double x) -> double {return gloc::polyval(x, 0.2, .3, .1, .4);};
-    double checker = 1.;
-    double value = poly(1.);
-    REQUIRE(checker == value);
-
-    std::vector<double> params(4);
-    params[0] = 0.2;
-    params[1] = 0.3;
-    params[2] = 0.1;
-    params[3] = 0.4;
-
-    gloc::Polynome<double> poly2(params);
-
-    double val1 = poly(2.);
-    double val2 = poly2(2.);
-    std::cout << val1 << " : " << val2 << std::endl;
-    REQUIRE(val1 == val2);
-            
-}

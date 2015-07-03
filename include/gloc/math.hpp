@@ -81,26 +81,6 @@ namespace gloc
       }
     };
 
-  /**
-   * the polyval class is a metatemplate function
-   * which gets a various number of parameters
-   * f(x, p0, ..., pn) = x^n * p_0 + ... + x * p_{n - 1} + p_n
-   * @param: x is the value where f i evaluated at
-   * @param params...: a list of values
-   */
-  template<class real, class first>
-    real
-    polyval (real x, first pi)
-    {
-      return pi;
-    }
-
-  template<class real, class first, class ... types>
-    real
-    polyval (real x, first pi, types ... params)
-    {
-      return x * pi + polyval (x, params...);
-    }
 
 } // end namespace gloc
 #endif // MATH_HPP

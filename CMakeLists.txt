@@ -136,16 +136,11 @@ if(BUILD_PYTHON)
     message("toch output: ${OUTPUT}")
     configure_file(${SETUP_PY_IN} ${SETUP_PY})
 
-    add_custom_command(OUTPUT ${OUTPUT}
-                       COMMAND ${PYTHON} ${SETUP_PY} develop
-                       DEPENDS ${DEPS})
-
-    #add_custom_target(target ALL DEPENDS ${OUTPUT})
 
     install(CODE "execute_process(COMMAND python ${SETUP_PY} install)")
     ADD_SUBDIRECTORY(python/gloc)
-    
 
+    
 endif(BUILD_PYTHON)
 
 #
