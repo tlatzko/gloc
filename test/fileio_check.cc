@@ -17,6 +17,7 @@ TEST_CASE("Cubfile will be opend", "[cubfile]"){
     string path(CUBFILE);
     gloc::CuboidFile cub(path);
     auto frame = cub.getFrame(10);
+    cub.printHeader();
     REQUIRE(cub.getFrameCount() > 0);
     
 }
