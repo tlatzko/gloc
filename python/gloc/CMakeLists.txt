@@ -37,8 +37,6 @@ message("something weird happend")
 addPythonMod(greet greet.cpp)
 target_link_libraries(greet gloc)
 
-addPythonMod(gaussian gaussian.cpp)
-
 addPythonMod(gloripex gloripex.cpp)
 target_link_libraries(gloripex gloc)
 
