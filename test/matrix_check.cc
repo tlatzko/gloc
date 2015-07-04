@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
-
+#include <catch.hpp>
 #include <string>
 #include <exception>
 #include <iostream>
@@ -7,7 +7,9 @@
 #include "gloc/matrix.hpp"
 
 using namespace gloc;
-SCENARIO("This scenario will check the matrix and vector classes", "[Matrix]"){
+
+
+TEST_CASE("This scenario will check the matrix and vector classes"){
   GIVEN("a pointer to a gloc::Matrix"){
     std::shared_ptr<Mat<double>> mat(new Mat<double>(10, 20));
     WHEN("pointer is not forgotten "){

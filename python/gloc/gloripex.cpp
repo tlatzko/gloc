@@ -52,6 +52,5 @@ BOOST_PYTHON_MODULE(gloripex){
       ;
 
   p::class_<StreamReader>("StreamReader", p::init<std::string>())
-      .def("gn", &StreamReader::get_next)
-      .def("get_next", &py_get_next);
+      .def("get_next", &py_get_next, p::return_value_policy<p::manage_new_object>());
 }
