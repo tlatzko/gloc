@@ -180,6 +180,7 @@ BOOST_PYTHON_MODULE(gloripex){
       ;
 
   p::class_<StreamReader>("StreamReader", p::init<std::string>())
+<<<<<<< HEAD
       .def("get_next", &StreamReader::get_next)
       .def("next", &next_from_stream);
   
@@ -190,4 +191,7 @@ BOOST_PYTHON_MODULE(gloripex){
       .staticmethod("create")
       .def("hello", &SpTest::hello)
       ;
+=======
+      .def("get_next", &py_get_next);//, p::return_value_policy<p::manage_new_object>());
+>>>>>>> 7fd4ae129676fbb219e37f64210575b5088a7511
 }
