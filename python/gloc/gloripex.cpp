@@ -1,3 +1,4 @@
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -21,68 +22,24 @@ PyObject* add(PyObject* a_, PyObject* b_){
   */
   PyArrayObject* a=(PyArrayObject*) a_;
   PyArrayObject* b=(PyArrayObject*) b_;
-  int n = a->dimensions[0];
+
+  int n = PyArray_NDIM(a);
   int dims[1];
   dims[0] = n;
   PyArrayObject* ret;
   ret = (PyArrayObject*) PyArray_FromDims(1, dims, NPY_DOUBLE);
   int i;
-  char *aj=a->data;
-  char *bj=b->data;
-  double *retj = (double *)ret->data;
+  char *aj= reinterpret_cast<char*>(PyArray_DATA(a));
+  char *bj= reinterpret_cast<char*>(PyArray_DATA(b));
+  double *retj = (double *)PyArray_DATA(ret);
   for (i=0; i < n; i++) {
     *retj++ = *((double *)aj) + *((double *)bj);
-    aj += a->strides[0];
-    bj += b->strides[0];
+    aj += PyArray_STRIDES(a)[0];
+    bj += PyArray_STRIDES(b)[0];
   }
   return (PyObject *)ret;
 }
 
-
-p::object stdVecToNumpyArray( std::vector<double> const& vec )
-{
-      npy_intp size = vec.size();
-
-     /* const_cast is rather horrible but we need a writable pointer
-        in C++11, vec.data() will do the trick
-        but you will still need to const_cast
-      */
-
-      double * data = size ? const_cast<double *>(&vec[0]) 
-        : static_cast<double *>(NULL); 
-
-    // create a PyObject * from pointer and data 
-      PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_DOUBLE, data );
-      boost::python::handle<> handle( pyObj );
-      boost::python::numeric::array arr( handle );
-
-    /* The problem of returning arr is twofold: firstly the user can modify
-      the data which will betray the const-correctness 
-      Secondly the lifetime of the data is managed by the C++ API and not the 
-      lifetime of the numpy array whatsoever. But we have a simple solution..
-     */
-
-       return arr.copy(); // copy the object. numpy owns the copy now.
-  }
-
-p::object create_vector(npy_intp size){
-  double* data = new double[size];
-  
-      
-  // create a PyObject * from pointer and data 
-  PyObject * pyObj = PyArray_SimpleNewFromData( 1, &size, NPY_DOUBLE, data );
-  boost::python::handle<> handle( pyObj );
-  boost::python::numeric::array arr( handle );
-
-  /* The problem of returning arr is twofold: firstly the user can modify
-     the data which will betray the const-correctness 
-     Secondly the lifetime of the data is managed by the C++ API and not the 
-     lifetime of the numpy array whatsoever. But we have a simple solution..
-  */
-
-  return arr.copy(); // copy the object. numpy owns the copy now.
-  
-}
 
 bn::ndarray mywrapper(const std::vector<double>& v) {
   //std::vector<double> v = myfunc();
@@ -166,7 +123,7 @@ BOOST_PYTHON_MODULE(gloripex){
   import_array();
   p::def("test_function", test_function );
 
-  p::def("create_vector", create_vector);
+
 
   p::def("add2", add);
   p::class_<MatDouble, std::shared_ptr<MatDouble> >("MatDouble", p::init<>())
@@ -180,7 +137,6 @@ BOOST_PYTHON_MODULE(gloripex){
       ;
 
   p::class_<StreamReader>("StreamReader", p::init<std::string>())
-<<<<<<< HEAD
       .def("get_next", &StreamReader::get_next)
       .def("next", &next_from_stream);
   
@@ -191,7 +147,5 @@ BOOST_PYTHON_MODULE(gloripex){
       .staticmethod("create")
       .def("hello", &SpTest::hello)
       ;
-=======
-      .def("get_next", &py_get_next);//, p::return_value_policy<p::manage_new_object>());
->>>>>>> 7fd4ae129676fbb219e37f64210575b5088a7511
+
 }
