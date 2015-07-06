@@ -1,15 +1,44 @@
 #!python
-from setuptools import setup, find_packages
 from distutils.sysconfig import get_python_lib
+from distutils.command.build import build as _build
 import glob
 import os
 import sys
 import shutil
+import subprocess
 
-if os.path.exists('readme.rst'):
-    print("""The setup.py script should be executed from the build directory. 
-    Please see the file 'readme.rst' for further instructions.""")
-    sys.exit(1)
+
+# use setuptools by default as per the official advice at:
+# packaging.python.org/en/latest/current.html#packaging-tool-recommendations
+use_setuptools = True
+
+if use_setuptools:
+    try:
+        from setuptools import setup
+        from setuptools.command.install import install as _install
+    except ImportError:
+        use_setuptools = False
+
+else:
+    from distutils.core import setup
+    from distutils.command.install import install as _install
+
+
+def configuration(parent_package='', top_path=None):
+    if os.path.exists('MANIFEST'):
+        os.remove('MANIFEST')
+    from numpy.distutils.misc_util import Configuration
+    config = Configuration(None, parent_package, top_path)
+
+    config.set_options(
+        ignore_setup_xxx_py=True,
+        assume_default_configuration=True,
+        delegate_options_to_subpackages=True,
+        quiet=True)
+
+    config.add_subpackage(os.path.join("${CMAKE_CURRENT_SOURCE_DIR}/python/gloc"))
+
+    return config
 
 
 def copy_libraries():
@@ -17,26 +46,97 @@ def copy_libraries():
     Just a hack but necessary for the installation
     '''
     target_path = "${LIBRARY_OUTPUT_PATH}"
-    lib_files = [f for f in os.listdir(target_path) if ".so" in f]
+    lib_files = [fi for fi in os.listdir(target_path) if ".so" in fi]
     print("move library files: {}".format(lib_files))
-    for f in lib_files:
-        shutil.copy(os.path.join(target_path, f),
-                    os.path.join("${CMAKE_CURRENT_SOURCE_DIR}/python/gloc", f))
+    for fi in lib_files:
+        shutil.copy(os.path.join(target_path, fi),
+                    os.path.join("${CMAKE_CURRENT_SOURCE_DIR}/python/gloc", fi))
 
 
-copy_libraries()
+class BuildWithbuild(_build):
+    _build_opts = _build.user_options
+    user_options = [
+        ('define=', 'D',
+         'build <var>:<type>=<value>'),
+    ]
+    user_options.extend(_build_opts)
+
+
+    def initialize_options(self):
+        _build.initialize_options(self)
+        self.define = None
+
+
+    def finalize_options(self):
+        _build.finalize_options(self)
+        # The argument parsing will result in self.define being a string, but
+        # it has to be a list of 2-tuples.
+        # Multiple symbols can be separated with semi-colons.
+        if self.define:
+            defines = self.define.split(';')
+            self.define = [(s.strip(), None) if '=' not in s else
+                           tuple(ss.strip() for ss in s.split('='))
+                           for s in defines]
+            build_opts.extend(self.define)
+
+    def run(self):
+        make_build()
+        # can't use super() here because _build is an old style class in 2.7
+        _build.run(self)
+
+
+class InstallWithbuild(_install):
+    _install_opts = _install.user_options
+    user_options = [
+        ('define=', 'D',
+         'build <var>:<type>=<value>'),
+    ]
+    user_options.extend(_install_opts)
+
+    def initialize_options(self):
+        _install.initialize_options(self)
+        self.define = None
+
+    def finalize_options(self):
+        _install.finalize_options(self)
+        # The argument parsing will result in self.define being a string, but
+        # it has to be a list of 2-tuples.
+        # Multiple symbols can be separated with semi-colons.
+        if self.define:
+            defines = self.define.split(';')
+            self.define = [(s.strip(), None) if '=' not in s else
+                           tuple(ss.strip() for ss in s.split('='))
+                           for s in defines]
+            build_opts.extend(self.define)
+
+    def run(self):
+        # can't use super() here because _install is an old style class in 2.7
+        _install.run(self)
+
+
+def make_build():
+    make_cmd = ["make"]
+
+    if subprocess.call(make_cmd) != 0:
+        raise EnvironmentError("error calling build")
+    copy_libraries()
+
 
 setup(
-    name = "gloc",
+    name="gloc",
     version="0.1.0",
     packages=['gloc'],
-    package_dir = { 'gloc': "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc"},
-    package_data = {'': ['*.so']},
-    author = 'Thomas Latzko',
-    author_email = "thomas.latzko@kit.edu",
-    description = 'Use the CMake build system to make Python modules.',
-    license = 'Apache',
-    keywords = 'cmake cython build',
-    url = 'http://github.com/tlatzko/gloc',
-    zip_safe = False,
-    )
+    package_dir={'gloc': "${CMAKE_CURRENT_SOURCE_DIR}/python/gloc"},
+    package_data={'': ['*.so']},
+    author='Thomas Latzko',
+    author_email="thomas.latzko@kit.edu",
+    description='Use the CMake build system to make Python modules.',
+    license='Apache',
+    keywords='cmake cython build',
+    url='http://github.com/tlatzko/gloc',
+    zip_safe=False,
+    cmdclass={
+        'build' : BuildWithbuild,
+        'install' : InstallWithbuild,
+    }
+)

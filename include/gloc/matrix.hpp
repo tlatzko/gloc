@@ -4,7 +4,7 @@
 #include <string>
 #include <exception>
 #include <memory>
-
+#include <vector>
 
 namespace gloc {
 /**
@@ -34,33 +34,25 @@ class Mat{
   size_t height_;
   size_t width_;
   
-  bool forget_;
-
-  real* data_;  
+  
+  std::vector<real> data_;
 
  public:
   Mat(){}
   
   Mat(const size_t& height, const size_t& width):
-      height_(height), width_(width), forget_(false){
-    data_ = new real[height_ * width_];
+      height_(height), width_(width), data_(height * width){
+    
   }
-  
+
+
   /* FIXIT now there should be no copies
      Mat(const Mat& other) : height_(other.height), width_(other.width), forget_(false){
      data_ = new real[height_ * width_];
     
      }
   */
-  
-  ~Mat(){
-    if(!forget_){
-      if(data_){
-        delete data_;
-      }
-    }
 
-  }
 
   /**********************  access functions ** */ 
   real &operator[](const size_t& pos){
@@ -79,12 +71,11 @@ class Mat{
   size_t width(){
     return width_;
   }
-  /**
-   * Is required to call the get_data function
-   */
-  void forget(){
-    forget_ = true;
+
+  size_t get_size(){
+    return data_.size();
   }
+
 
   /**
    * The get_data function will allow
@@ -92,13 +83,15 @@ class Mat{
    * It can now be deleted without delete also
    * the data pointer.
    */
-  real* get_data() noexcept(false) {
-    if(!forget_){
-      throw PointerIsBound;
-    }
-    
+  std::vector<real>& get_data() {
+
     return data_;
   }
+
+  real* get_raw_data(){
+    return data_.data();
+  }
+      
 };
 
 
