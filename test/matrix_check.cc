@@ -8,7 +8,7 @@
 
 using namespace gloc;
 
-
+/** old testcase for matrix
 TEST_CASE("This scenario will check the matrix and vector classes"){
   GIVEN("a pointer to a gloc::Matrix"){
     std::shared_ptr<Mat<double>> mat(new Mat<double>(10, 20));
@@ -30,6 +30,20 @@ TEST_CASE("This scenario will check the matrix and vector classes"){
           REQUIRE(data[0] == 10.);
           delete data;
         }
+    }
+  }
+}
+
+*/
+
+TEST_CASE("A test case for the matrix class"){
+  GIVEN("a matrix A"){
+    Mat<double> A(10, 10);
+    WHEN("write in Matrix"){
+      A(3, 3) = 5.;
+      THEN("The result should be the same value"){
+        REQUIRE(A(3, 3) == 5);
+      }
     }
   }
 }

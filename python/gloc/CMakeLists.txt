@@ -37,10 +37,10 @@ message("something weird happend")
 addPythonMod(greet greet.cpp)
 target_link_libraries(greet gloc)
 
-addPythonMod(gaussian gaussian.cpp)
-
 addPythonMod(gloripex gloripex.cpp)
 target_link_libraries(gloripex gloc)
+
+addPythonMod(vect vect.cpp)
 
 # Python install path
 set(PY_PATH ${PYTHON_INSTALL_PATH}/gloc)
