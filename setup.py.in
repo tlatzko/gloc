@@ -6,7 +6,7 @@ import os
 import sys
 import shutil
 import subprocess
-
+from distutils.command.build_py import build_py
 
 # use setuptools by default as per the official advice at:
 # packaging.python.org/en/latest/current.html#packaging-tool-recommendations
