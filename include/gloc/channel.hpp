@@ -3,6 +3,7 @@
 
 #ifndef GLOC_CHANNEL_HPP
 #define GLOC_CHANNEL_HPP
+#define _GLIBCXX_USE_NANOSLEEP
 #include <list>
 #include <thread>
 #include <mutex>
@@ -25,17 +26,25 @@ namespace gloc
   namespace internal
   {
 
-#if __cplusplus <= 201103L
-// since C++14 in std, see Herb Sutter's blog
-    template<class T, class ...Args>
-      std::unique_ptr<T>
-      make_unique (Args&& ...args)
-      {
-	return std::unique_ptr < T > (new T (std::forward<Args>(args)...));
-      }
-#else
-    using std::make_unique;
-#endif
+    #if __cplusplus <= 201103L
+    // since C++14 in std, see Herb Sutter's blog
+    
+      template<class T, class ...Args>
+          std::unique_ptr<T>  
+          make_unique (Args&& ...args)
+          {
+              return std::unique_ptr < T > (new T (std::forward<Args>(args)...));
+          }
+
+    template<class T>
+        struct _is_exception_safe
+        {
+            enum {value = true};
+        };
+
+    #else
+        using std::make_unique;
+
 
     /**
      * FIXME
@@ -45,9 +54,12 @@ namespace gloc
     template<class T>
       struct _is_exception_safe : std::integral_constant<bool,
 	  std::is_nothrow_copy_constructible<T>::value
-	      or std::is_nothrow_move_constructible<T>::value or true>
+	      or std::is_nothrow_move_constructible<T>::value>
       {
       };
+
+
+#endif
 
 // Note that currently handshakes between send/receives inside selects
 // have higher priority compared to sends/receives outside selects.
@@ -688,7 +700,17 @@ namespace gloc
 	    if (m_try_functions.at (i) ())
 	      break;
 
-	    std::this_thread::sleep_for (sleep);
+        #if __cplusplus <= 201103L
+        // since C++14 in std, see Herb Sutter's blog
+ 
+            auto start = std::chrono::high_resolution_clock::now();
+                while (std::chrono::high_resolution_clock::now() - start < sleep){
+                }
+        #else
+
+    	    std::this_thread::sleep_for (sleep);
+        #endif
+
 	  }
       }
   };

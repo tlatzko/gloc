@@ -22,9 +22,9 @@ using namespace gloc;
 
 //std::string localData = "/media/latzko/store/20120828_152843.cub";
 std::string localData = "/home/latzko/work/experimental/data/20120828_124051.cub";
-using upheader = std::shared_ptr<CuboidFrameHeader>;
-using frame_t = Eigen::ArrayXXd;
-using frame_ptr = std::shared_ptr<frame_t>;
+//typedef std::shared_ptr<CuboidFrameHeader>;
+typedef Eigen::ArrayXXd frame_t;
+typedef std::shared_ptr<frame_t> frame_ptr;
 
 class Runnable
 {

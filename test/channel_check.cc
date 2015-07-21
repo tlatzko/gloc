@@ -116,7 +116,7 @@ void txsend(gloc::channel<std::unique_ptr<test> > c){
 
 
 TEST_CASE("pointer"){
-    using up = std::unique_ptr<test>;
+    typedef std::unique_ptr<test> up;
     gloc::channel<up> c;
     std::thread t(txsend, c);
     auto r = c.recv();
