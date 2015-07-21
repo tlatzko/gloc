@@ -20,8 +20,11 @@
 
 using namespace gloc;
 
+
+
 //std::string localData = "/media/latzko/store/20120828_152843.cub";
-std::string localData = "/home/latzko/work/experimental/data/20120828_124051.cub";
+//
+std::string localData = "../data/20120913_135249.cub";
 //typedef std::shared_ptr<CuboidFrameHeader>;
 typedef Eigen::ArrayXXd frame_t;
 typedef std::shared_ptr<frame_t> frame_ptr;
@@ -84,7 +87,7 @@ class ReadNode : public Runnable{
                 auto frame = cub.getFrame(i);
                 auto header = frame.getFrameHeader();
                 auto image = F(frame);
-
+                std::cout<< "push frame " <<i<< std::endl;
                 frame_out_.send(std::move(image));
                 frame_header_out_.send(header);
             }
@@ -155,6 +158,7 @@ class FrameMean : public Runnable{
                 M_ = M_ + M;
                 frames_out_.send(std::move(frame));
                 ++i;
+                std::cout<< "frame recv " << i << std::endl;
             }
             std::cout<< "mean end\n";
             //std::cout<< M_ / i<< std::endl;
@@ -200,6 +204,7 @@ public:
 
         bool fill_the_buffer(){
             for(size_t i =0; i < buffer_size; ++i){
+                std::cout << "recv frame\n";
                 auto frame = frames_.recv();
                 if(frame == nullptr){
                     frames_out_.send(nullptr);
