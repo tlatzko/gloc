@@ -124,5 +124,3 @@ TEST_CASE("pointer"){
     t.join();
     std::cout<< r->t[0];
 }
-
-

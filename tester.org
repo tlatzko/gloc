@@ -1,0 +1,55 @@
+#+TITLE: tester
+#+DATE: <2015-09-30 Wed>
+#+AUTHOR: Thomas Latzko
+#+EMAIL: latzko@imkffbtl
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t c:nil
+#+OPTIONS: creator:comment d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t
+#+OPTIONS: num:t p:nil pri:nil stat:t tags:t tasks:t tex:t timestamp:t toc:t
+#+OPTIONS: todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+
+* Programm parts
+** COMMENT std::array examples
+#+BEGIN: 
+#+begin_src C++ :flags --std=c++11 -pthread
+  #include <iostream>
+  #include <vector>
+
+  template <class real> class Wavelet {
+  public:
+    real *getLowPassDec() { return lpd_; }
+
+  protected:
+    real[] lpd_;
+  };
+
+  template <class real = double> class DB2 : public Wavelet<real> {
+  protected:
+    real[] lpd = { -0.12940952255092145, 0.22414386804185735,
+                     0.83651630373746899,  0.48296291314469025 };
+  };
+
+  std::array<double, 4> get_coeff() {
+    return { 1., 2., 3., 4. };
+  }
+
+  void print_wave(const Wavelet &w) {
+    std::cout << w.N << std::endl;
+    for (int i = 0; i < w.lpd.size(); ++i) {
+      const double val = w.lpd[i];
+      std::cout << val << " ";
+    }
+  }
+
+  int main() { print_wave(DB2); }
+#+end_src
+
+#+RESULTS:
+
+#+END:

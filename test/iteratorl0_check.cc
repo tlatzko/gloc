@@ -18,16 +18,12 @@ SCENARIO("We have a cubfile and read Read it with a stream", "[CuboidFile], [cha
       THEN("there should be received frames"){
         StreamReader sr(CUBFILE);
         while(true){
-          
           auto fr = sr.get_next();
           if(fr == nullptr){
             break;
           }
         }
-        
-        
       }
     }
-    
   }
 }

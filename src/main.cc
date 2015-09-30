@@ -6,7 +6,7 @@ void push_to_talk(){
 }
 
 int main(int argc, char *argv[]) {
-    
+
     gloc::CuboidFile cub;
     std::cout << "Hello World!" << std::endl;
 }
