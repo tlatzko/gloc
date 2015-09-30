@@ -20,7 +20,7 @@ SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 #
 # Optional settings from the main folder
 #
-set(BUILD_PYTHON on CACHE BOOL "BUILD Python extension")
+set(BUILD_PYTHON off CACHE BOOL "BUILD Python extension")
 
 #
 # Debugging Options
@@ -71,7 +71,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg") 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 # set profiler
 set(OPTIMIZE TRUE)
 if(OPTIMIZE)
@@ -82,6 +82,7 @@ else(OPTIMIZE)
 endif(OPTIMIZE)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__GXX_EXPERIMENTAL_CXX0X__=1")
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__GLIBCXX_USE_NANOSLEEP")
     
 
 if(USE_OPENMP)

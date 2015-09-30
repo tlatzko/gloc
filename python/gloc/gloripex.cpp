@@ -20,6 +20,7 @@ PyObject* add(PyObject* a_, PyObject* b_){
   /*
     various checks
   */
+
   PyArrayObject* a=(PyArrayObject*) a_;
   PyArrayObject* b=(PyArrayObject*) b_;
 
@@ -42,6 +43,7 @@ PyObject* add(PyObject* a_, PyObject* b_){
 
 
 bn::ndarray mywrapper(const std::vector<double>& v) {
+
   //std::vector<double> v = myfunc();
   Py_intptr_t shape[1] = { static_cast<Py_intptr_t> (v.size()) };
   bn::ndarray result = bn::zeros(1, shape, bn::dtype::get_builtin<double>());
@@ -97,6 +99,7 @@ struct SpTest{
       delete[] data;
     }
   }
+  
   static std::shared_ptr<SpTest> create(){return std::shared_ptr<SpTest>(new SpTest);}
   std::string hello() { return "just nod if you can hear me 2";}
 };

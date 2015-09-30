@@ -14,8 +14,15 @@
 
 namespace gloc {
 
+<<<<<<< HEAD
 using frame_t = Mat<double>;
 using frame_ptr = std::shared_ptr<frame_t>;
+=======
+
+typedef Mat<double> frame_t;
+typedef std::shared_ptr<frame_t> frame_ptr;
+
+>>>>>>> 7b5e879cfa535ed3593ebfb27a2f4360b89294b9
 
 /**
  * a function wich transmute a CuboidFrame

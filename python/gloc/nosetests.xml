@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="2" errors="2" failures="0" skip="0"><testcase classname="nose.failure.Failure" name="runTest" time="0.000"><error type="exceptions.ImportError" message="No module named gloripex"><![CDATA[Traceback (most recent call last):
   File "/usr/lib64/python2.7/unittest/case.py", line 369, in run
     testMethod()
@@ -23,3 +24,6 @@ ImportError: No module named gloripex
     from gloc.greet import greet
 ImportError: No module named greet
 ]]></error></testcase></testsuite>
+=======
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="3" errors="0" failures="0" skip="0"><testcase classname="gloc.tests.test_gloripex" name="test_one" time="0.000"></testcase><testcase classname="gloc.tests.test_gloripex" name="test_class" time="0.000"></testcase><testcase classname="gloc.tests.test_var" name="test_greet" time="0.000"></testcase></testsuite>
+>>>>>>> 7b5e879cfa535ed3593ebfb27a2f4360b89294b9
