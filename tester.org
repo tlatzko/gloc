@@ -53,3 +53,28 @@
 #+RESULTS:
 
 #+END:
+** Vector copy or clone
+
+#+BEGIN: Vector
+#+begin_src C++ :flags --std=c++11 -pthread
+  #include <vector>
+  #include <iostream>
+
+  using namespace std;
+
+  int main() {
+    vector<int> v(10);
+    for(int i =9; i< 10; ++i){
+      v[i] = i;
+    }
+    vector<int> v2 = v;
+    v2[0]  = 10;
+    std::cout << "v: "<<  v[0]<< " | v2: " << v2[0];
+  }
+#+end_src
+
+#+RESULTS:
+| v: 0 | v2: 10 |
+
+#+END:
+

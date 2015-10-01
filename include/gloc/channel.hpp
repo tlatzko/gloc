@@ -28,7 +28,6 @@ namespace gloc
 
     #if __cplusplus <= 201103L
     // since C++14 in std, see Herb Sutter's blog
-    
       template<class T, class ...Args>
           std::unique_ptr<T>  
           make_unique (Args&& ...args)
