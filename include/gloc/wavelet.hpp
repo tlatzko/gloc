@@ -5,5 +5,4 @@
 #include "gloc/wavefilt.h"
 
 
-
 #endif // WAVELET_HPP_
