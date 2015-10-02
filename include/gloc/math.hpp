@@ -33,11 +33,23 @@ template <class real> real apod_sinc(real x, real alpha) {
  */
 template <class real> real sinc(const real &x) {
   const real pi = static_cast<real>(PI);
-  if (x == static_cast<real>(0)) {
+  if (std::abs(x) == static_cast<real>(0)) {
     return static_cast<real>(1);
   }
   const real xpi = pi * x;
   return static_cast<real>(sin(xpi) / xpi);
+}
+
+/**
+ * The lanczos filter is a resampling filter similat to the apod_sinc but
+ * have much better antialiasing properties and less ringing
+ **/
+template <class real = double> real lanczos_filter(real x, real alpha) {
+  if(x > alpha){
+    return static_cast<real>(0);
+  }
+  const real result = sinc(x) * sinc(x / alpha);
+  return result;
 }
 
 /**
